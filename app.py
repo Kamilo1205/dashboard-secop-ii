@@ -8,6 +8,7 @@ import streamlit as st
 from bson.decimal128 import Decimal128
 from dotenv import load_dotenv
 from pymongo import MongoClient
+import certifi
 
 
 # ============================================================
@@ -81,10 +82,15 @@ st.markdown(
 def conectar_mongodb(uri, nombre_bd):
     cliente = MongoClient(
         uri,
-        serverSelectionTimeoutMS=15000,
-        connectTimeoutMS=15000
+        tls=True,
+        tlsCAFile=certifi.where(),
+        serverSelectionTimeoutMS=30000,
+        connectTimeoutMS=30000,
+        socketTimeoutMS=30000
     )
+
     cliente.admin.command("ping")
+
     return cliente[nombre_bd]
 
 
